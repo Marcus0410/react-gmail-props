@@ -4,6 +4,7 @@ import initialEmails from './data/emails'
 
 import './styles/App.css'
 import Emails from './Emails'
+import Search from './Search'
 
 const getReadEmails = emails => emails.filter(email => !email.read)
 
@@ -13,6 +14,7 @@ function App() {
   const [emails, setEmails] = useState(initialEmails)
   const [hideRead, setHideRead] = useState(false)
   const [currentTab, setCurrentTab] = useState('inbox')
+  const [searchQuery, setSearchQuery] = useState('') // state for the search bar
 
   const unreadEmails = emails.filter(email => !email.read)
   const starredEmails = emails.filter(email => email.starred)
@@ -42,6 +44,11 @@ function App() {
   if (currentTab === 'starred')
     filteredEmails = getStarredEmails(filteredEmails)
 
+  // filter emails by search
+  filteredEmails = filteredEmails.filter(email =>
+    email.title.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
   return (
     <div className="app">
       <header className="header">
@@ -55,10 +62,7 @@ function App() {
             alt="gmail logo"
           />
         </div>
-
-        <div className="search">
-          <input className="search-bar" placeholder="Search mail" />
-        </div>
+        <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
       </header>
       <nav className="left-menu">
         <ul className="inbox-list">
